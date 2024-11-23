@@ -1,0 +1,12 @@
+[
+    {
+        "modelUrl": "smartwater-models/smart_water_meter/smart-water-meter.gltf",
+        "title": "\u667a\u80fd\u6c34\u8868",
+        "price": "DN20"
+    },
+    {
+        "modelUrl": "smartwater-models/remote_flow_meter/remote-flow-meter.gltf",
+        "title": "\u8fdc\u4f20\u6d41\u91cf\u8ba1",
+        "price": "DN300"
+    }
+]

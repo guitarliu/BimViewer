@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BimViewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            flex: 1;
+            background-color: #FFFFFF;
+        }
+
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .button {
+            background: #0F172A;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 75vw;
+        }
+
+        @media (max-width: 1280px) {
+            .logo-nav {
+                width: 90vw;
+            }
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* New Styles for Dropdown Menu */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-right: 2rem;
+        }
+
+        /* Hide navigation menu for smaller screens and show menu toggle */
+        @media (max-width: 1024px) {
+            .nav {
+                display: none; /* Hide the navigation */
+                position: absolute;
+                top: 4rem;
+                justify-content: center;
+                flex-direction: column;
+                background-color: #fff;
+                width: 90vw;
+                padding: 1rem 2rem;
+                border-top: 1px solid #eee;
+            }
+
+            .nav.show {
+                display: flex; /* Show the navigation when toggle is clicked */
+            }
+
+            .menu-toggle {
+                display: block; /* Show menu button for smaller screens */
+            }
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .search-cart {
+            display: flex;
+            align-items: center;
+            margin-left: 5rem;
+            right: 16vw; 
+            position: absolute;
+            gap: 1rem;
+        }
+
+        @media (max-width: 1280px) {
+            .search-cart {
+                right: 5vw;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .search-cart {
+                right: 5vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-cart {
+                right: 2.5vw;
+            }
+        }
+
+        .search-bar {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .products-grid {
+            margin: 0 auto;
+            width: 75vw;
+            margin-top: 2rem;
+            margin-bottom: 10rem;
+        }
+
+        @media (max-width: 1280px) {
+            .products-grid {
+                width: 90vw;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                width: 90vw;
+            }
+        }
+
+        .products-grid a {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .model-viewer {
+            width: 55%;
+            height: 0;
+            padding-bottom: 55%;
+        }
+
+        .model-info {
+            display: flex;
+            padding: 1rem 1rem;
+            padding-bottom: 1rem;
+            flex-direction: column;
+            row-gap: 0.5rem;
+            justify-content: left;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 1024px) {
+            .model-viewer {
+                width: 100%;
+                height: 0;
+                padding-bottom: 100%;
+            }
+            .model-info {
+                width: 100%;
+                padding: 1rem;
+            }
+        }
+
+        .products-grid h1 {
+            color: #020817;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .products-grid h4 {
+            color: #020817;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            color: #4E535D;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature {
+            margin-left: 2rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            background: #FAFAFA;
+            padding: 2rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+            margin-top: auto;
+        }
+
+        .footer-box {
+            background: #FAFAFA;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+            width: 75vw;
+            height: 250px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                height: auto;
+            }
+
+            .footer-box {
+                display: flex;
+                width: 90vw;
+                height: auto;
+                align-items: center;
+                grid-template-rows: repeat(4, 1fr);
+                grid-template-columns: 1fr;  /* Width less than 768px, columns turn to 1 */
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .footer-box {
+                width: 90vw;
+                flex-direction: column;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);  /* Width less than 1024px, columns turn to 2 */
+            }
+        }
+
+        .subscribe-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: left;
+            padding-top: 1rem;
+        }
+
+        .footer-info {
+            color: #737373;
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.5rem;
+            justify-content: left;
+            align-items: flex-start;
+            padding-bottom: 0.5rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 400px;
+            padding: 0.5rem 0rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 220px;
+            height: 40px;
+        }
+
+        .newsletter-form button {
+            display: flex;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 40px;
+            border-radius: 20px;
+            border: 0px solid transparent
+        }
+
+        .newsletter-form button:hover {
+            background-color: #272E3F;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 4rem;
+            justify-content: right;
+            padding-top: 2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 0.5rem;
+        }
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column ul li a {
+            color: #262626;
+            text-decoration: none;
+        }
+
+        .social-links {
+            color: #737373;
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 0.5rem;
+            justify-content: right;
+        }
+
+        .social-links a {
+            color: #737373;
+            text-decoration: none;
+        } 
+    </style>
+  <script type="module" crossorigin src="./assets/main-DkmaFD7s.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-nav">
+            <a href="index.html" class="logo">BimViewer</a>
+            <span class="menu-toggle" id="menu-toggle">☰</span>
+            <nav class="nav" id="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="traditional-models.html" target="_blank">Traditional BIM</a>
+                <a href="smartwater-models.html" target="_blank">Smartwater BIM</a>
+                <a href="about.html" target="_blank">About</a>
+            </nav>
+        </div>
+        <div class="search-cart">
+            <input type="search" class="search-bar" placeholder="Search for modules...">
+        </div>
+    </header>
+
+    <section class="products-grid">
+        <div class="model-info">
+            <h1>关于我们</h1>
+            <h4>欢迎来到 BimViewer - 您的智慧水务与BIM解决方案平台</h4>
+            <p class="description">
+                在 <strong>BimViewer</strong>，我们致力于通过前沿技术和建筑信息模型（BIM）革新城市水务管理的方式。<!---->
+                我们的平台旨在无缝集成智慧水务系统与城市基础设施，为水务分配、处理和消耗提供全面<!---->
+                的实时数据支持与分析。
+            </p>
+            <h4>我们的原景</h4>
+            <p class="description">
+                我们期待着一个更加智能、可持续的未来，在这个未来，城市能够高效管理水资源。<!---->
+                通过利用先进的BIM技术，并将其与智慧水务系统相结合，我们旨在帮助城市规划者、工程师<!---->
+                和政府部门做出数据驱动的决策，以优化水资源和基础设施的使用。
+            </p>
+            <h4>我们提供的服务</h4>
+            <p class="description">
+                <strong>BimViewer</strong>为您提供一个强大的平台，用于可视化、管理和优化城市水务基础设施。<!---->
+                我们的主要功能包括：
+                <ul>
+                    <li class="feature"><strong>智慧水务系统</strong>：通过数字化工具实时监控和管理供水与污水处理厂</li>
+                    <li class="feature"><strong>BIM集成</strong>：通过高质量的3D BIM模型，集成复杂的地下管线系统，全面了解水务分配网络。</li>
+                    <li class="feature"><strong>先进的数据可视化</strong>：互动式3D模型、城市设计和基础设施展示，帮助您将项目从规划到实施可视化。</li>
+                    <li class="feature"><strong>可持续发展</strong>：帮助城市减少浪费、提高水资源利用效率，并创建更加可持续的城市环境。</li>
+                </ul>
+            </p>
+            <h4>为什么选择我们？</h4>
+            <p class="description">
+                <ul>
+                    <li class="feature"><strong>全面的解决方案</strong>：结合先进的 BIM 技术与智慧水务管理，<!---->
+                        助力实现高效的规划、设计与运营，推动行业数字化转型。</li>
+                    <li class="feature"><strong>创新的技术</strong>：我们依托丰富的工程经验和深厚的技术积累，<!---->
+                        采用前沿的 3D 建模、数据可视化及智慧城市技术，持续为客户带来创新的解决方案，<!---->
+                        助力您在激烈的市场竞争中脱颖而出。</li>
+                    <li class="feature"><strong>城市规划与水务管理专家</strong>：作为国内领先的设计团队，我们的团队由经验丰富的工程师、<!---->
+                        城市规划专家及技术研发人员组成，专注于提供高效、智能的水务管理与可持续基础设施建设方案。</li>
+                    <li class="feature"><strong>以客户为中心</strong>：BimViewer 始终以客户需求为导向，<!---->
+                        根据具体项目特点量身定制解决方案，帮助客户高效实现项目目标，加速智慧化转型，推动行业升级。</li>
+                </ul>
+            </p>
+            <h4>我们的使命</h4>
+            <p class="description">
+                我们的使命是为各级政府、开发商以及水务部门提供所需的工具和洞察力，<!---->
+                帮助他们建设更加智能、更加有韧性的城市。通过创新的BIM技术和智能水务系统，<!---->
+                我们正在为未来城市建设打下基础，确保水资源的安全、高效和公平分配。
+            </p>
+            <h4>联系我们</h4>
+            <p class="description">
+                如果您想了解如何提升城市水务基础设施，或对我们的平台感兴趣，欢迎随时联系我们。<!---->与我们一起，共同打造智慧城市的未来！
+            </p>
+            
+        </div>
+    </section>
+
+    <section class="footer">
+        <div class="footer-box">
+            <div class="subscribe-info">
+                <h4>Subscribe to our newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <button type="submit" class="button">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="smartwater-models.html" target="_blank">SmartWaters</a></li>
+                        <li><a href="traditional-models.html" target="_blank">Traditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="mailto:whuxiaotaiye@gmail.com">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>© 2024 BimViewer</p>
+                <p>Bringing BIM for everyone</p>
+            </div>
+            <div class="social-links">
+                <a href="https://guitarliu.github.io" target="_blank">@Guitarliu</a>
+                <a href="https://spacetools.top" target="_blank">@SpaceTools</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // JavaScript to toggle menu on smaller screens
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "F12" || 
+                (event.ctrlKey && event.shiftKey && (event.key === 'I' 
+                                                     || event.key === 'C' 
+                                                     || event.key === 'J')) 
+                    || (event.ctrlKey && event.key === 'U')) {
+                    event.preventDefault();
+                    alert('你小子别想扒站！');
+                }
+            });
+            
+            document.addEventListener('contextmenu', function(event) {
+            if (event.target.tagName === 'A') {
+                return; 
+            }
+            event.preventDefault();
+            });
+    
+            document.addEventListener('contextmenu', function(event) {
+                event.preventDefault();
+            });
+    
+            document.addEventListener('keydown', function (event) {
+            if (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) {
+                event.preventDefault();
+                alert('你小子别想扒站！');
+                }
+            });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BimViewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            flex: 1;
+            background-color: #FFFFFF;
+        }
+
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 75vw;
+        }
+
+        @media (max-width: 1280px) {
+            .logo-nav {
+                width: 90vw;
+            }
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* New Styles for Dropdown Menu */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-right: 2rem;
+        }
+
+        /* Hide navigation menu for smaller screens and show menu toggle */
+        @media (max-width: 1280px) {
+            .nav {
+                display: none; /* Hide the navigation */
+                position: absolute;
+                top: 4rem;
+                justify-content: center;
+                flex-direction: column;
+                background-color: #fff;
+                width: 90vw;
+                padding: 1rem 2rem;
+                border-top: 1px solid #eee;
+            }
+
+            .nav.show {
+                display: flex; /* Show the navigation when toggle is clicked */
+            }
+
+            .menu-toggle {
+                display: block; /* Show menu button for smaller screens */
+            }
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .search-cart {
+            display: flex;
+            align-items: center;
+            margin-left: 5rem;
+            right: 12vw; 
+            position: absolute;
+            gap: 1rem;
+        }
+
+        @media (max-width: 1280px) {
+            .search-cart {
+                right: 5vw;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .search-cart {
+                right: 5vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-cart {
+                right: 2.5vw;
+            }
+        }
+
+        .search-bar {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .button {
+            background: #0F172A;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .traditional-models {
+            width: 75vw;
+            margin: 0 auto;
+            padding: 1rem 0rem;
+        }
+
+        @media (max-width: 1280px) {
+            .traditional-models {
+                width: 90vw;
+            }
+        }
+
+        .traditional-models h1 {
+            color: #020817;
+            font-size: 2rem;
+        }
+
+        .traditional-models p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #65758B;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 0 auto;
+            width: 75vw;
+            padding-bottom: 5rem;
+        }
+
+        @media (max-width: 1280px) {
+            .products-grid {
+                width: 90vw;
+                grid-template-columns: repeat(3, 1fr);  /* Width less than 1280px, columns turn to 2 */
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                width: 90vw;
+                grid-template-columns: repeat(2, 1fr);  /* Width less than 1024px, columns turn to 2 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                width: 90vw;
+                grid-template-columns: 1fr;  /* Width less than 768px, columns turn to 1 */
+            }
+        }
+
+        .products-grid a {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .product-card {
+            background: #FFFFFF;
+            margin-top: 0rem;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #F0E8E2;
+        }
+
+        .model-viewer {
+            width: 100%;
+            height: 300px; /* Modify Height */
+            margin-bottom: 1rem;
+        }
+
+        .model-info {
+            display: flex;
+            padding: 0rem 1rem;
+            padding-bottom: 1rem;
+            flex-direction: column;
+            row-gap: 0.5rem;
+            justify-content: left;
+            align-items: flex-start;
+        }
+
+        .products-grid h3 {
+            color: #171717;
+        }
+
+        .price {
+            color: #171717;
+        }
+
+        .pagination-grid {
+            display: flex;
+            margin: 0 auto;
+            margin-bottom: 2rem;
+        }
+        .pagination {
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        .page-button {
+            padding: 10px 20px;
+            margin: 2px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .page-button:hover {
+            background-color: #ddd;
+        }
+        .page-button.active {
+            font-weight: bolder;
+            color: #000000;
+        }      
+
+        .footer {
+            background: #FAFAFA;
+            padding: 0rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+            margin-top: auto;
+        }
+
+        .footer-box {
+            background: #FAFAFA;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 2rem;
+            width: 75vw;
+            height: 250px;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                height: auto;
+            }
+            .footer-box {
+                display: flex;
+                width: 90vw;
+                height: auto;
+                align-items: center;
+                grid-template-rows: repeat(4, 1fr);
+                grid-template-columns: 1fr;  /* Width less than 768px, columns turn to 1 */
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .footer-box {
+                width: 90vw;
+                flex-direction: column;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);  /* Width less than 1024px, columns turn to 2 */
+            }
+        }
+
+        .subscribe-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: left;
+            padding-top: 2rem;
+        }
+
+        .footer-info {
+            color: #737373;
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.5rem;
+            justify-content: left;
+            align-items: flex-start;
+            padding-bottom: 1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 400px;
+            padding: 0.5rem 0rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 220px;
+            height: 40px;
+        }
+
+        .newsletter-form button {
+            display: flex;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 40px;
+            border-radius: 20px;
+            border: 0px solid transparent
+        }
+
+        .newsletter-form button:hover {
+            background-color: #272E3F;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 4rem;
+            justify-content: right;
+            padding-top: 2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 0.5rem;
+        }
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column ul li a {
+            color: #262626;
+            text-decoration: none;
+        }
+
+        .social-links {
+            color: #737373;
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 2rem;
+            justify-content: right;
+        }
+
+        .social-links a {
+            color: #737373;
+            text-decoration: none;
+        } 
+    </style>
+  <script type="module" crossorigin src="./assets/main-DkmaFD7s.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-nav">
+            <a href="index.html" class="logo">BimViewer</a>
+            <span class="menu-toggle" id="menu-toggle">☰</span>
+            <nav class="nav" id="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="traditional-models.html" target="_blank">Traditional BIM</a>
+                <a href="smartwater-models.html" target="_blank">Smartwater BIM</a>
+                <a href="about.html" target="_blank">About</a>
+            </nav>
+        </div>
+        <div class="search-cart">
+            <input type="search" class="search-bar" id="search-bar" placeholder="Search for modules...">
+        </div>
+    </header>
+
+    <section class="traditional-models">
+        <div class="traditional-info">
+            <h1>Traditional Models</h1>
+            <p class="category">Category</p>
+        </div>
+    </section>
+
+    <section class="products-grid">
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="model-viewer" data-model-url=""></div>
+            <div class="model-info">
+                <h3></h3>
+                <p class="price"></p>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="pagination-grid">
+        <div class="pagination" id="pagination">
+            <button class="page-button" onclick="changePage(1)">1</button>
+            <button class="page-button" onclick="changePage(2)">2</button>
+            <button class="page-button" onclick="changePage(3)">3</button>
+            <button class="page-button" onclick="changePage(4)">4</button>
+            <button class="page-button" onclick="changePage(5)">5</button>
+        </div>
+    </section>
+
+    <section class="footer">
+        <div class="footer-box">
+            <div class="subscribe-info">
+                <h4>Subscribe to our newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <button type="submit" class="button">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="smartwater-models.html" target="_blank">SmartWaters</a></li>
+                        <li><a href="tradition-models.html" target="_blank">Traditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="mailto:whuxiaotaiye@gmail.com">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>© 2024 BimViewer</p>
+                <p>Bringing BIM to Everyone</p>
+            </div>
+            <div class="social-links">
+                <a href="https://guitarliu.github.io" target="_blank">@Guitarliu</a>
+                <a href="https://spacetools.top" target="_blank">@SpaceTools</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // JavaScript to toggle menu on smaller screens
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+
+        let modelData = [];
+        let originalModelData = [];
+        let currentPage = 1;
+        const modelsPerPage = 9;
+
+        // Load model_data.json
+        function loadModelData() {
+            fetch('model_data.json') 
+                .then(response => response.json())
+                .then(data => {
+                    originalModelData = data;
+                    modelData = data;
+                    loadProducts(currentPage);
+                })
+                .catch(error => {
+                    console.error('加载模型数据失败:', error);
+                });
+        }
+
+        // Load models and their data
+        function loadProducts(page) {
+            const productCards = document.querySelectorAll('.product-card');
+            const startIndex = (page - 1) * modelsPerPage;
+            const endIndex = startIndex + modelsPerPage;
+            const modelsToDisplay = modelData.slice(startIndex, endIndex);
+
+            productCards.forEach((card, index) => {
+                const model = modelsToDisplay[index];
+                const modelViewer = card.querySelector('.model-viewer');
+                const modelInfo = card.querySelector('.model-info');
+                const h3 = modelInfo.querySelector('h3');
+                const price = modelInfo.querySelector('.price');
+                if (model) {
+                    modelViewer.dataset.modelUrl = model.modelUrl;
+                    h3.textContent = model.title;
+                    price.textContent = model.price;
+                    card.style.display = 'block';
+                } else {
+                    modelViewer.dataset.modelUrl = '';
+                    card.style.display = 'none';
+                }
+            });
+
+            const pageButtons = document.querySelectorAll('.page-button');
+            // Set CurrentPage's pagenumber to active
+            pageButtons.forEach(button => {
+                const pageNumber = parseInt(button.textContent, 10);
+                if (pageNumber === page) {
+                    button.classList.add('active');  
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            loadProducts(page);
+        }
+
+        // Initinalize
+        loadModelData();
+
+        /* Add Search Function*/
+        const searchBar = document.getElementById('search-bar');
+
+        // Add event listener to the search bar after DOM is loaded
+        if (searchBar) {
+            searchBar.addEventListener('input', function (event) {
+                const query = searchBar.value.trim();
+                if (query.trim() === "") {
+                    modelData = [...originalModelData];
+                }else {
+                    modelData = originalModelData.filter(model => 
+                        model.title.includes(query)
+                    );
+                }
+                
+                loadProducts(currentPage);
+            });
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "F12" || 
+                (event.ctrlKey && event.shiftKey && (event.key === 'I' 
+                                                     || event.key === 'C' 
+                                                     || event.key === 'J')) 
+                    || (event.ctrlKey && event.key === 'U')) {
+                    event.preventDefault();
+                    alert('你小子别想扒站！');
+                }
+            });
+            
+            document.addEventListener('contextmenu', function(event) {
+            if (event.target.tagName === 'A') {
+                return; 
+            }
+            event.preventDefault();
+            });
+    
+            document.addEventListener('contextmenu', function(event) {
+                event.preventDefault();
+            });
+    
+            document.addEventListener('keydown', function (event) {
+            if (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) {
+                event.preventDefault();
+                alert('你小子别想扒站！');
+                }
+            });
+
+    </script>
+</body>
+</html>

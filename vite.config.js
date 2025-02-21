@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   base: './',
@@ -10,7 +10,7 @@ export default defineConfig({
         traditional: 'traditional-models.html',
         smartwater: 'smartwater-models.html',
         structure: 'structure-models.html',
-      }
-    }
+      },
+    },
   }
-})
+});

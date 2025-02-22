@@ -37,7 +37,7 @@ npx vite
 当你准备将项目部署到生产环境时，使用以下命令生成构建文件：
 
 ```bash
-npx vite build
+npm run build
 ```
 
 此命令会生成生产环境所需的静态文件，并将它们放在 `dist/` 文件夹中。你可以将 `dist/` 文件夹中的内容上传到任何支持静态文件托管的服务器上，如 [Cloudflare Pages](https://pages.cloudflare.com/)、[Vercel](https://vercel.com/)、[Netlify](https://www.netlify.com/) 等。
